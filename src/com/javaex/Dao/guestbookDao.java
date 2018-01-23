@@ -86,7 +86,7 @@ public class guestbookDao {
 		
 	}
 
-	public void delete(int no) {
+	public void delete(int no,String pass) {
 		// 0. import java.sql.*;
 		
 				Connection conn = null;
@@ -105,10 +105,12 @@ public class guestbookDao {
 					
 					// 3. SQL문 준비 / 바인딩 / 실행
 					String query =" delete from guestbook " + 
-								  " where no = ? ";
+								  " where no = ? "+
+							      " and password = ? ";
 					pstmt = conn.prepareStatement(query);
 					
 					pstmt.setInt(1,no);
+					pstmt.setString(2, pass);
 					
 					
 					int count = pstmt.executeUpdate();
@@ -171,7 +173,8 @@ public class guestbookDao {
 						           " password," +
 						           " content, " +
 						           " reg_date " +
-						           " from guestbook ";
+						           " from guestbook " +
+						           " order by no desc ";
 
 					pstmt = conn.prepareStatement(query);
 					rs = pstmt.executeQuery();

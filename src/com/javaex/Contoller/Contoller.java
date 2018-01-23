@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.javaex.Dao.guestbookDao;
 import com.javaex.Vo.guestbookVo;
+import com.javaex.util.WebUtil;
 
 @WebServlet("/cl")
 public class Contoller extends HttpServlet {
@@ -29,8 +30,10 @@ public class Contoller extends HttpServlet {
 			List<guestbookVo> list =dao.getList();
 			request.setAttribute("list", list);
 			
-			RequestDispatcher rd = request.getRequestDispatcher("list.jsp");
-			rd.forward(request, response);
+			WebUtil.forward(request, response, "/WEB-INF/list.jsp");
+			
+			//RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/list.jsp");
+			//rd.forward(request, response);
 			
 		}else if("add".equals(actionName)) {
 			System.out.println("add 진입");
@@ -46,22 +49,30 @@ public class Contoller extends HttpServlet {
 		    vo.setContent(content);
 			dao.insert(vo);
 			
-			response.sendRedirect("cl?aname=list");
+			WebUtil.redirect(request, response, "/guestbook2/cl?aname=list");
+			//response.sendRedirect("/guestbook2/cl?aname=list");
 			
 		}else if("deleteform".equals(actionName)) {
 			
 			String no = request.getParameter("no");
 			request.setAttribute("no", no);
 			
-			RequestDispatcher rd = request.getRequestDispatcher("deleteform.jsp");
-			rd.forward(request, response);
+			
+			WebUtil.forward(request, response, "/WEB-INF/deleteform.jsp");
+			//RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/deleteform.jsp");
+			//rd.forward(request, response);
 			
 		}else if("delete".equals(actionName)) {
-			String no = request.getParameter("no");
-			String password = request.getParameter("password");
-			guestbookVo vo = new guestbookVo();
+			System.out.println("delete 진입");
+			
+			int no = Integer.parseInt(request.getParameter("no"));
+			String pass = request.getParameter("password");
 		    guestbookDao dao = new guestbookDao();
 		    
+		    dao.delete(no, pass);
+		    
+		    WebUtil.redirect(request, response, "/guestbook2/cl?aname=list");
+		    //response.sendRedirect("/guestbook2/cl?aname=list");
 		    
 		    
 		}
